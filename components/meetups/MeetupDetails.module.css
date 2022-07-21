@@ -1,0 +1,10 @@
+.detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.detail img {
+    width: 100%;
+    object-fit: cover;
+}
