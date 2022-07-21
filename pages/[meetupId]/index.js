@@ -43,7 +43,6 @@ export async function getStaticProps(context) {
                 descpirtion: "A first meetup",
             },
         },
-        revalidate: 10,
     };
 }
 
