@@ -1,3 +1,4 @@
+import { MongoClient } from "mongodb";
 import MeetupDetails from "../../components/meetups/MeetupDetails";
 
 function MeetupDetailsPage() {
@@ -12,27 +13,24 @@ function MeetupDetailsPage() {
 }
 
 export async function getStaticPaths() {
+    const { DB_URL } = process.env;
+    const client = await MongoClient.connect(DB_URL);
+    const db = client.db();
+    const meetupsCollection = db.collection("meetups");
+
+    const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
+
+    client.close();
+
     return {
         fallback: false,
-        paths: [
-            {
-                params: {
-                    meetupId: "m1",
-                },
-            },
-            {
-                params: {
-                    meetupId: "m2",
-                },
-            },
-        ],
+        paths: meetups.map((meetup) => ({
+            params: { meetupId: meetup._id.toString() },
+        })),
     };
 }
 
-export async function getStaticProps(context) {
-    const meetupId = context.params.meetupId;
-
-    console.log(meetupId);
+export async function getStaticProps() {
     return {
         props: {
             meetupData: {
